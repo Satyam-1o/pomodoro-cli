@@ -1,13 +1,9 @@
 const fs = require("fs");
 const path = require("path");
 
-// ---------------- CONFIG ----------------
-
 const WORK_MIN = parseInt(process.argv[2]) || 25;
 const BREAK_MIN = parseInt(process.argv[3]) || 5;
 const STATS_FILE = path.join(__dirname, "stats.json");
-
-// ---------------- TOKYO NIGHT COLORS ----------------
 
 const C = {
   blue: "\x1b[38;2;122;162;247m",
@@ -21,8 +17,6 @@ const C = {
 };
 
 const paint = (text, color) => `${color}${text}${C.reset}`;
-
-// ---------------- STATS ----------------
 
 const today = () => new Date().toISOString().split("T")[0];
 
@@ -39,8 +33,6 @@ function saveSession() {
 }
 
 let sessionCount = loadStats()[today()] || 0;
-
-// ---------------- UI ----------------
 
 function progressBar(progress, length = 30) {
   const filled = Math.round(progress * length);
@@ -63,7 +55,6 @@ const bell = (times = 2) => {
   }, 300);
 };
 
-// ---------------- TIMER ----------------
 
 function startTimer(minutes, label, isWork, next) {
   const total = minutes * 60;
@@ -124,13 +115,10 @@ function startTimer(minutes, label, isWork, next) {
     }
   }, 1000);
 
-  // Pause toggle
   process.stdin.on("data", key => {
     if (key.toString() === " ") paused = !paused;
   });
 }
-
-// ---------------- INPUT CONTROL ----------------
 
 process.stdin.setRawMode(true);
 process.stdin.resume();
@@ -141,8 +129,6 @@ process.stdin.on("data", key => {
     process.exit();
   }
 });
-
-// ---------------- LOOP ----------------
 
 function cycle() {
   startTimer(WORK_MIN, "WORK SESSION", true, () =>
