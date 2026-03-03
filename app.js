@@ -13,7 +13,7 @@ const C = {
   yellow: "\x1b[38;2;224;175;104m",
   light: "\x1b[38;2;192;202;245m",
   gray: "\x1b[38;2;65;72;104m",
-  reset: "\x1b[0m"
+  reset: "\x1b[0m",
 };
 
 const paint = (text, color) => `${color}${text}${C.reset}`;
@@ -38,8 +38,10 @@ function progressBar(progress, length = 30) {
   const filled = Math.round(progress * length);
   return (
     "[" +
-    C.blue + "█".repeat(filled) +
-    C.gray + "░".repeat(length - filled) +
+    C.blue +
+    "█".repeat(filled) +
+    C.gray +
+    "░".repeat(length - filled) +
     C.reset +
     "]"
   );
@@ -54,7 +56,6 @@ const bell = (times = 2) => {
     if (++count >= times) clearInterval(i);
   }, 300);
 };
-
 
 function startTimer(minutes, label, isWork, next) {
   const total = minutes * 60;
@@ -73,33 +74,29 @@ function startTimer(minutes, label, isWork, next) {
     console.log(paint("ASCII POMODORO", C.purple));
     console.log(paint("---------------------------", C.gray));
     console.log(paint("Time: ", C.light) + paint(clock(), C.blue));
-    console.log(
-      isWork
-        ? paint(label, C.red)
-        : paint(label, C.green)
-    );
+    console.log(isWork ? paint(label, C.red) : paint(label, C.green));
 
     console.log(progressBar(progress));
     console.log(paint(`${Math.floor(progress * 100)}% | ${mm}:${ss}`, C.light));
 
     console.log(
       "\n" +
-      paint("Sessions Today: ", C.light) +
-      paint(sessionCount.toString(), C.purple)
+        paint("Sessions Today: ", C.light) +
+        paint(sessionCount.toString(), C.purple),
     );
 
     console.log(
       paused
         ? paint("STATUS: PAUSED", C.yellow)
-        : paint("STATUS: RUNNING", C.green)
+        : paint("STATUS: RUNNING", C.green),
     );
 
     console.log(
       "\n" +
-      paint("SPACE", C.blue) +
-      paint(" pause/resume | ", C.gray) +
-      paint("Ctrl+C", C.blue) +
-      paint(" exit", C.gray)
+        paint("SPACE", C.blue) +
+        paint(" pause/resume | ", C.gray) +
+        paint("Ctrl+C", C.blue) +
+        paint(" exit", C.gray),
     );
 
     if (remaining <= 0) {
@@ -115,7 +112,7 @@ function startTimer(minutes, label, isWork, next) {
     }
   }, 1000);
 
-  process.stdin.on("data", key => {
+  process.stdin.on("data", (key) => {
     if (key.toString() === " ") paused = !paused;
   });
 }
@@ -123,7 +120,7 @@ function startTimer(minutes, label, isWork, next) {
 process.stdin.setRawMode(true);
 process.stdin.resume();
 
-process.stdin.on("data", key => {
+process.stdin.on("data", (key) => {
   if (key.toString() === "\u0003") {
     console.clear();
     process.exit();
@@ -132,7 +129,7 @@ process.stdin.on("data", key => {
 
 function cycle() {
   startTimer(WORK_MIN, "WORK SESSION", true, () =>
-    startTimer(BREAK_MIN, "BREAK SESSION", false, cycle)
+    startTimer(BREAK_MIN, "BREAK SESSION", false, cycle),
   );
 }
 
